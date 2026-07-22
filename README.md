@@ -266,34 +266,6 @@ Backend:
 http://localhost:5000
 ```
 
----
-
-# 📸 Screenshots
-
-## Dashboard
-
-> Add dashboard screenshot here
-
----
-
-## Workflow Builder
-
-> Add workflow builder screenshot here
-
----
-
-## AI Assistant
-
-> Add AI Assistant screenshot here
-
----
-
-## Analytics
-
-> Add analytics screenshot here
-
----
-
 # 🔄 Workflow Example
 
 ```
