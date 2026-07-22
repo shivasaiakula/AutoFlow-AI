@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-[#0A0A0A] text-slate-300 antialiased font-sans overflow-hidden select-none;
+    background-color: #0A0A0A;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1F1F1F;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333333;
+}
+
+/* Radial Grid background for Workflow Canvas */
+.bg-canvas-grid {
+  background-color: #0C0C0C;
+  background-image: radial-gradient(#222222 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glassmorphic dark panels */
+.glass-panel {
+  background-color: rgba(22, 22, 22, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid #1F1F1F;
+}
+
+.glass-panel-header {
+  background-color: rgba(26, 26, 26, 0.9);
+  border-bottom: 1px solid #1F1F1F;
+}
+
+/* Elegant glow accents */
+.glow-indigo {
+  box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.25);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px -3px rgba(168, 85, 247, 0.25);
+}

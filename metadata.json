@@ -1,0 +1,6 @@
+{
+  "name": "AutoFlow AI - AI Workflow Automation Platform",
+  "description": "Next-generation enterprise AI workflow automation platform featuring Voice-to-Workflow AI, AI Copilot, Drag-and-Drop Canvas, Real-Time Collaboration, AI Optimizer, Marketplace, ROI Calculator, Digital Employee, and Meeting Transcripts to Workflow.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
