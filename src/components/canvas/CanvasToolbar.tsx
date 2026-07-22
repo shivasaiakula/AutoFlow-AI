@@ -13,6 +13,8 @@ import {
   Trash2,
   Sparkles,
   SlidersHorizontal,
+  FileJson,
+  History,
 } from 'lucide-react';
 import { ValidationIssue } from '../../lib/workflowEngine';
 
@@ -34,6 +36,8 @@ interface CanvasToolbarProps {
   isSimulating: boolean;
   onClearCanvas: () => void;
   onOpenOptimizer: () => void;
+  onOpenExportImport: () => void;
+  onOpenHistory: () => void;
   healthScore?: number;
 }
 
@@ -55,6 +59,8 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   isSimulating,
   onClearCanvas,
   onOpenOptimizer,
+  onOpenExportImport,
+  onOpenHistory,
   healthScore = 94,
 }) => {
   const errorsCount = validationIssues.filter((i) => i.severity === 'error').length;
@@ -138,6 +144,25 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
         >
           <Grid className="w-4 h-4" />
         </button>
+
+        {/* Export / Import Studio Button */}
+        <button
+          onClick={onOpenExportImport}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium bg-[#222] text-slate-200 hover:bg-[#2A2A2A] hover:text-white transition-colors border border-[#333]"
+          title="Export or Import JSON Workflow"
+        >
+          <FileJson className="w-3.5 h-3.5 text-indigo-400" />
+          <span>Export / Import</span>
+        </button>
+
+        {/* Execution History Button */}
+        <button
+          onClick={onOpenHistory}
+          className="p-1.5 rounded text-slate-400 hover:bg-[#222] hover:text-white transition-colors"
+          title="View Execution History & Replay Runs"
+        >
+          <History className="w-4 h-4 text-indigo-400" />
+        </button>
       </div>
 
       {/* Right Toolbar Controls */}
@@ -182,3 +207,4 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
     </div>
   );
 };
+

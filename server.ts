@@ -88,6 +88,44 @@ Return a valid JSON object with:
     }
   });
 
+  // 2b. Gemini Workflow Generator API
+  app.post('/api/gemini/generate-workflow', async (req, res) => {
+    try {
+      const { prompt } = req.body;
+      if (!prompt) {
+        return res.status(400).json({ error: 'Prompt is required' });
+      }
+
+      const ai = getGenAI();
+      if (!ai) {
+        return res.status(503).json({ error: 'Gemini API key not configured. Using fallback engine.' });
+      }
+
+      const systemPrompt = `You are an expert AI Workflow Architect. Convert this natural language prompt into a structured visual workflow.
+Prompt: "${prompt}"
+
+Return a JSON object with:
+- name: workflow title
+- description: short description
+- nodes: array of { id, type (trigger, condition, delay, loop, approval, email, sms, api_request, database, ai_decision, webhook, document, payment, notification, custom_function), x, y, data: { label, description } }
+- connections: array of { id, sourceId, targetId, label }`;
+
+      const response = await ai.models.generateContent({
+        model: 'gemini-3.6-flash',
+        contents: systemPrompt,
+        config: {
+          responseMimeType: 'application/json',
+        },
+      });
+
+      const parsed = JSON.parse(response.text || '{}');
+      res.json(parsed);
+    } catch (err: any) {
+      console.error('Gemini generate workflow error:', err);
+      res.status(500).json({ error: 'Failed to generate workflow with Gemini', details: err.message });
+    }
+  });
+
   // 3. AI Copilot Chat
   app.post('/api/ai/copilot', async (req, res) => {
     try {
