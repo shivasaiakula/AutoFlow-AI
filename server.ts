@@ -4,6 +4,13 @@ import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI, Type } from '@google/genai';
 
+import { listWorkflows, getWorkflow, saveWorkflow, deleteWorkflow, getWorkflowRuns } from './src/engine/db.js';
+import { executeWorkflow } from './src/engine/executor.js';
+import { cronScheduler } from './src/engine/cronScheduler.js';
+import { getUserToken, saveUserToken, deleteUserToken } from './src/engine/gmailIntegration.js';
+import { validateWorkflowDefinition } from './src/engine/schema.js';
+import './src/engine/integrations.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -12,6 +19,11 @@ async function startServer() {
   const PORT = 3000;
 
   app.use(express.json({ limit: '10mb' }));
+
+  // Initialize Cron Scheduler from DB on server boot
+  cronScheduler.syncFromDatabase().catch((err) => {
+    console.error('Failed to sync cron schedules on boot:', err);
+  });
 
   // Initialize Gemini AI Client lazily/safely
   const getGenAI = () => {
@@ -323,6 +335,125 @@ Return JSON with:
       console.error('Meeting-to-workflow error:', err);
       res.status(500).json({ error: 'Meeting processing failed', details: err.message });
     }
+  });
+
+  // ---------------------------------------------------------
+  // WORKFLOW ENGINE & PERSISTENCE API ENDPOINTS (SQLite / Prisma)
+  // ---------------------------------------------------------
+  app.get('/api/workflows', async (req, res) => {
+    try {
+      const workflows = await listWorkflows();
+      res.json(workflows);
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to list workflows', details: err.message });
+    }
+  });
+
+  app.get('/api/workflows/:id', async (req, res) => {
+    try {
+      const wf = await getWorkflow(req.params.id);
+      if (!wf) return res.status(404).json({ error: 'Workflow not found' });
+      res.json(wf);
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to fetch workflow', details: err.message });
+    }
+  });
+
+  app.post('/api/workflows', async (req, res) => {
+    try {
+      const validation = validateWorkflowDefinition(req.body);
+      if (!validation.valid) {
+        return res.status(400).json({ error: 'Invalid workflow schema', validationErrors: validation.errors });
+      }
+
+      const saved = await saveWorkflow(req.body);
+      await cronScheduler.syncFromDatabase();
+      res.json({ message: 'Workflow saved successfully', workflow: saved });
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to save workflow', details: err.message });
+    }
+  });
+
+  app.delete('/api/workflows/:id', async (req, res) => {
+    try {
+      await deleteWorkflow(req.params.id);
+      cronScheduler.stopScheduledWorkflow(req.params.id);
+      res.json({ message: 'Workflow deleted successfully' });
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to delete workflow', details: err.message });
+    }
+  });
+
+  // Execute Workflow Endpoint
+  app.post('/api/workflows/:id/execute', async (req, res) => {
+    try {
+      const { initialInput } = req.body || {};
+      const runResult = await executeWorkflow(req.params.id, {
+        triggerSource: 'Manual API Trigger',
+        initialInput,
+      });
+      res.json(runResult);
+    } catch (err: any) {
+      res.status(500).json({ error: 'Workflow execution failed', details: err.message });
+    }
+  });
+
+  // Execution Runs & Logs Endpoint
+  app.get('/api/runs', async (req, res) => {
+    try {
+      const runs = await getWorkflowRuns(30);
+      res.json(runs);
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to list execution runs', details: err.message });
+    }
+  });
+
+  // Cron Triggers API
+  app.get('/api/triggers/cron', (req, res) => {
+    res.json(cronScheduler.listActiveSchedules());
+  });
+
+  app.post('/api/triggers/cron', async (req, res) => {
+    const { workflowId, cronExpression } = req.body;
+    if (!workflowId || !cronExpression) {
+      return res.status(400).json({ error: 'workflowId and cronExpression are required' });
+    }
+    const success = cronScheduler.scheduleWorkflow(workflowId, cronExpression);
+    if (!success) {
+      return res.status(400).json({ error: 'Invalid cron expression or failed to schedule' });
+    }
+    res.json({ message: `Scheduled workflow ${workflowId} with "${cronExpression}"` });
+  });
+
+  app.delete('/api/triggers/cron/:workflowId', (req, res) => {
+    const stopped = cronScheduler.stopScheduledWorkflow(req.params.workflowId);
+    res.json({ stopped, message: `Cron schedule stopped for workflow ${req.params.workflowId}` });
+  });
+
+  // OAuth Token Management for Gmail
+  app.get('/api/oauth/gmail/status', async (req, res) => {
+    const token = await getUserToken('default-user', 'gmail');
+    res.json({ connected: Boolean(token?.accessToken), expiresAt: token?.expiresAt });
+  });
+
+  app.post('/api/oauth/gmail/token', async (req, res) => {
+    const { accessToken, refreshToken, expiresAt } = req.body;
+    if (!accessToken) {
+      return res.status(400).json({ error: 'accessToken is required' });
+    }
+    await saveUserToken({
+      userId: 'default-user',
+      provider: 'gmail',
+      accessToken,
+      refreshToken,
+      expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+    });
+    res.json({ message: 'Gmail OAuth token saved securely' });
+  });
+
+  app.delete('/api/oauth/gmail/token', async (req, res) => {
+    await deleteUserToken('default-user', 'gmail');
+    res.json({ message: 'Gmail OAuth token removed' });
   });
 
   // Vite middleware in dev, static files in production
