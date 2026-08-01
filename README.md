@@ -1,325 +1,135 @@
 # 🚀 AutoFlow AI
 
-<div align="center">
-
-![AutoFlow AI Banner](https://img.shields.io/badge/AutoFlow-AI-blue?style=for-the-badge)
-
 ### Automate Work. Save Time. Build Smarter.
 
-An AI-powered workflow automation platform that enables businesses and individuals to create, automate, monitor, and optimize workflows with intelligent AI agents.
+An AI-powered workflow automation tool built with React, Vite, TypeScript, and the Google Gemini API. AutoFlow AI lets users describe tasks in natural language and have an AI agent plan, execute, and report on multi-step workflows — turning repetitive work into a single prompt.
 
+![Status](https://img.shields.io/badge/Status-In%20Development-yellow)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![React](https://img.shields.io/badge/React-19-blue)
-![Node.js](https://img.shields.io/badge/Node.js-Express-green)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-38BDF8)
+![TypeScript](https://img.shields.io/badge/TypeScript-blue)
 ![Gemini AI](https://img.shields.io/badge/Google-Gemini-orange)
-![Status](https://img.shields.io/badge/Status-Active-success)
-
-</div>
 
 ---
 
-# 📖 Overview
+## 📖 Overview
 
-AutoFlow AI is an intelligent workflow automation platform that combines Artificial Intelligence with modern business automation.
+AutoFlow AI combines a Vite + React + TypeScript frontend with a lightweight Node/TypeScript server to let users trigger AI-driven workflows — document processing, report generation, email drafting, and task automation — powered by the Google Gemini API.
 
-Instead of manually performing repetitive tasks, AutoFlow AI allows users to create AI-powered workflows using drag-and-drop automation, smart triggers, and intelligent decision-making.
+This project started from the Google AI Studio app template and is being actively extended into a full automation platform with persistent workflows, scheduled triggers, and third-party integrations.
 
-Whether it's sending emails, generating reports, analyzing documents, managing projects, or integrating with external applications, AutoFlow AI makes automation simple.
-
----
-
-# ✨ Features
-
-## 🤖 AI Automation
-
-- AI Workflow Assistant
-- Smart Decision Engine
-- AI Task Suggestions
-- AI Document Processing
-- AI Email Generation
-- AI Report Generator
-- AI Chat Assistant
+> **Project status:** Core AI-assisted single-workflow app is functional. Multi-step workflow builder, scheduling/triggers, and integrations (Gmail, Slack, GitHub, etc.) are in active development — see [Roadmap](#-roadmap).
 
 ---
 
-## ⚡ Workflow Builder
+## ✨ Current Features
 
-- Drag & Drop Workflow Designer
-- Visual Node Editor
-- Multi-step Workflows
-- Conditional Logic
-- Parallel Execution
-- Scheduled Tasks
-- Event Triggers
+- AI-powered task assistant using Google Gemini API
+- Single-page React + TypeScript UI (Vite build)
+- Lightweight TypeScript server (`server.ts`) for API requests
 
----
+## 🧭 Planned Features (see Roadmap)
 
-## 🔗 Integrations
-
-- Gmail
-- Slack
-- Discord
-- GitHub
-- Google Drive
-- Notion
-- Trello
-- Google Calendar
-- Webhooks
-- REST APIs
+- Visual drag-and-drop workflow builder with multi-step logic
+- Scheduled and event/webhook-based triggers
+- Background job queue for async, retryable workflow runs
+- Integrations: Gmail, Slack, Discord, GitHub, Google Drive, Notion, Trello, Calendar
+- Execution dashboard: logs, success rate, error tracking
+- Per-user OAuth credential storage
+- Authentication (JWT / Google OAuth) and role-based access
 
 ---
 
-## 📊 Dashboard
+## 🛠 Tech Stack
 
-- Live Analytics
-- Workflow Monitoring
-- Execution Logs
-- Performance Metrics
-- Success Rate
-- Error Tracking
-- Usage Statistics
+**Frontend:** React, Vite, TypeScript
+**Backend:** Node.js, TypeScript (`server.ts`)
+**AI:** Google Gemini API
+**Planned:** Redis/BullMQ (job queue), a persistent DB (PostgreSQL/MySQL + Prisma), Docker, GitHub Actions CI
 
 ---
 
-## 🔐 Authentication
-
-- JWT Authentication
-- Secure Login
-- Google OAuth
-- Role-Based Access Control
-- User Profiles
-
----
-
-## ☁ Cloud Features
-
-- Cloud Storage
-- Real-Time Sync
-- Workflow Backup
-- Multi-device Support
-
----
-
-# 🛠 Tech Stack
-
-## Frontend
-
-- React.js
-- Vite
-- Tailwind CSS
-- TypeScript
-- React Router
-- Axios
-- Framer Motion
-
----
-
-## Backend
-
-- Node.js
-- Express.js
-- REST APIs
-- JWT Authentication
-
----
-
-## Database
-
-- MySQL
-- Prisma ORM
-
----
-
-## AI
-
-- Google Gemini API
-- AI Agents
-- Prompt Engineering
-
----
-
-## DevOps
-
-- Docker
-- GitHub Actions
-- Render
-- Vercel
-
----
-
-# 📂 Project Structure
+## 📂 Project Structure
 
 ```
 AutoFlow-AI
 │
-├── client/
-│   ├── public/
-│   ├── src/
-│   │
-│   ├── components/
-│   ├── pages/
-│   ├── layouts/
-│   ├── hooks/
-│   ├── services/
-│   ├── assets/
-│   ├── utils/
-│   └── App.jsx
-│
-├── server/
-│   ├── config/
-│   ├── routes/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── services/
-│   ├── models/
-│   └── server.js
-│
-├── docs/
-├── screenshots/
-├── docker-compose.yml
+├── src/                # React frontend source
+├── assets/.aistudio    # AI Studio project metadata
+├── index.html
+├── metadata.json
 ├── package.json
+├── server.ts           # Node/TypeScript server entry point
+├── tsconfig.json
+├── vite.config.ts
+├── .env.example
 └── README.md
 ```
 
 ---
 
-# 🚀 Getting Started
+## 🚀 Getting Started
 
-## Clone Repository
+### Clone the repository
 
 ```bash
 git clone https://github.com/shivasaiakula/AutoFlow-AI.git
-
 cd AutoFlow-AI
 ```
 
----
-
-## Install Dependencies
-
-### Frontend
+### Install dependencies
 
 ```bash
-cd client
-
 npm install
 ```
 
-### Backend
+### Configure environment
 
-```bash
-cd ../server
+Copy `.env.example` to `.env` and fill in your keys:
 
-npm install
 ```
-
----
-
-## Configure Environment
-
-Create a `.env` file inside the server directory.
-
-```env
-PORT=5000
-
-JWT_SECRET=your_secret_key
-
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=password
-DB_NAME=autoflow
-
 GEMINI_API_KEY=your_api_key
-
-EMAIL_USER=your_email
-EMAIL_PASS=your_password
 ```
 
----
-
-## Start Backend
+### Run the app
 
 ```bash
 npm run dev
 ```
 
----
-
-## Start Frontend
-
-```bash
-cd client
-
-npm run dev
-```
-
----
-
-The application will run at:
+The app will be available at:
 
 ```
-Frontend:
 http://localhost:5173
-
-Backend:
-http://localhost:5000
-```
-## Workflow Builder
-
-> Add workfl
-
-# 🔄 Workflow Example
-
-```
-User Uploads File
-        │
-        ▼
-AI Reads Document
-        │
-        ▼
-Extract Important Data
-        │
-        ▼
-Generate Summary
-        │
-        ▼
-Email Summary
-        │
-        ▼
-Store Results
 ```
 
 ---
 
 # 🎯 Use Cases
 
-- Business Process Automation
-- AI Customer Support
-- HR Automation
-- Marketing Campaigns
-- Data Processing
-- Invoice Automation
-- Document Management
-- Email Automation
-- CRM Automation
-- Team Collaboration
+- AI-assisted document processing and summarization
+- Automated report generation
+- Draft/generate emails from prompts
+- Foundation for broader business process automation
 
 ---
 
 # 📈 Roadmap
 
-- [x] Authentication
-- [x] Dashboard
-- [x] Workflow Builder
-- [x] AI Assistant
-- [x] Analytics
-- [ ] Marketplace
-- [ ] Workflow Templates
-- [ ] Mobile App
-- [ ] Voice Commands
-- [ ] AI Copilot
-- [ ] Enterprise Version
+- [x] AI task assistant (Gemini integration)
+- [x] Vite + React + TypeScript frontend
+- [ ] Persistent workflow schema (nodes/edges/steps)
+- [ ] Workflow execution engine
+- [ ] Scheduled triggers (cron)
+- [ ] Webhook-based triggers
+- [ ] Background job queue (BullMQ + Redis)
+- [ ] First integration: Gmail
+- [ ] Additional integrations: Slack, GitHub, Google Drive, Notion, Trello, Calendar
+- [ ] Execution dashboard & logs
+- [ ] Authentication (JWT / Google OAuth)
+- [ ] Multi-user support with encrypted per-user credentials
+- [ ] Docker + CI/CD (GitHub Actions)
+- [ ] Test suite
 
 ---
 
@@ -328,36 +138,18 @@ Store Results
 Contributions are welcome!
 
 1. Fork the repository
-
 2. Create your feature branch
-
-```bash
-git checkout -b feature/NewFeature
-```
-
+   ```bash
+   git checkout -b feature/NewFeature
+   ```
 3. Commit your changes
-
-```bash
-git commit -m "Added New Feature"
-```
-
-4. Push
-
-```bash
-git push origin feature/NewFeature
-```
-
-5. Open a Pull Request
-
----
-
-# 🧪 Testing
-
-Run the test suite:
-
-```bash
-npm test
-```
+   ```bash
+   git commit -m "Added New Feature"
+   ```
+4. Push and open a Pull Request
+   ```bash
+   git push origin feature/NewFeature
+   ```
 
 ---
 
@@ -370,28 +162,10 @@ This project is licensed under the MIT License.
 # 👨‍💻 Author
 
 **Shiva Sai Akula**
-
-GitHub:
-https://github.com/shivasaiakula
+GitHub: [@shivasaiakula](https://github.com/shivasaiakula)
 
 ---
-
-# 🌟 Support
-
-If you found this project useful, please consider giving it a ⭐ on GitHub.
-
----
-
-# 💡 Vision
-
-> **"AutoFlow AI empowers everyone—from individuals to enterprises—to automate repetitive work with intelligent AI workflows, enabling teams to focus on innovation instead of routine tasks."**
-
----
-
-<div align="center">
 
 ### ⭐ Star this repository if you like the project!
 
 Made with ❤️ by **Shiva Sai Akula**
-
-</div>
