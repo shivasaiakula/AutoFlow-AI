@@ -168,4 +168,4 @@ GitHub: [@shivasaiakula](https://github.com/shivasaiakula)
 
 ### ⭐ Star this repository if you like the project!
 
-Made with ❤️ by **Shiva Sai Akula**
+Made  by **Shiva Sai Akula**
